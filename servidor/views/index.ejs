@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+	<link href="data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA1H3MAICAgAD///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAiIiIiIgAAAiIAAAACIAAhEgIgIgIRACESIiIiIhEAIiACIgIAIgAiIwIiIjAiACIiIiIiIiIAAiIiIiIiIAACIiAAAiIgAAIiAAAAIiAAAiAAAAACIAAAAAAAAAAAD//wAA//8AAP//AADgBwAAwAMAAIABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIABAACAAQAAg8EAAIfhAADP8wAA" rel="icon" type="image/x-icon" />
+        <link rel="stylesheet" type="text/css" href="css/index.css">
+	<title>vapor de agua</title>
+</head>
+<body>
+	<div id="cabecera">
+		<img id="tinfoli" src="imagenes/linedance.gif" />
+		<div id="fe"></div>
+	</div>
+	<div id="quimicam">
+		<img id="fo" src="" />
+	</div>
+
+	<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+	<script>
+		function formafecha(lafecha) {
+			var fecha = new Date(lafecha);
+			var horas = fecha.getHours();
+			horas = ("0" + horas).slice(-2);
+			var minutos = fecha.getMinutes();
+			minutos = ("0" + minutos).slice(-2);
+			var segundos = fecha.getSeconds();
+			segundos = ("0" + segundos).slice(-2);
+			fecha = fecha.getDate() +'-'+ (fecha.getMonth() + 1) +'-'+ fecha.getFullYear().toString().substr(-2) +' '+ horas +':'+ minutos +':'+ segundos;
+			return fecha;
+		}
+		var datos = <%- JSON.stringify(respuesta) %>;
+
+		if (datos.fo) {
+			$('#fo').attr('src','data:image/jpg;base64,'+ datos.fo);
+		} else {
+			$('#fo').attr('src','data:image/jpg;base64,/9j/4AAQSkZJRgABAQEASABIAAD//gATQ3JlYXRlZCB3aXRoIEdJTVD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQsNFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBT/wgARCAABAAEDAREAAhEBAxEB/8QAFAABAAAAAAAAAAAAAAAAAAAAB//EABQBAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhADEAAAAR8//8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABBQJ//8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAgBAwEBPwF//8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAgBAgEBPwF//8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQAGPwJ//8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPyF//9oADAMBAAIAAwAAABAf/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAgBAwEBPxB//8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAgBAgEBPxB//8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxB//9k=');
+		}
+
+		if (datos.fe) {
+			$('#fe').text(formafecha(datos.fe));
+		} else {
+			$('#fe').text('00-00-00 00:00:00');
+		}
+
+		var socket = io.connect();
+		socket.on('a', function (d) {
+			$('#fo').attr('src','data:image/jpg;base64,'+ d.respuesta.fo);
+			$('#fe').text(formafecha(d.respuesta.fe));
+			//console.log(d);
+		});
+	</script>
+
+</body>
+</html>
